@@ -1,22 +1,22 @@
 ﻿class Calculator
 {
     // Encapsulation as it hides the implementation details of the calculation from the user.
-    public double Add(double num1, double num2)
+    private double Add(double num1, double num2)
     {
         return num1 + num2;
     }
 
-    public double Subtract(double num1, double num2)
+    private double Subtract(double num1, double num2)
     {
         return num1 - num2;
     }
 
-    public double Multiply(double num1, double num2)
+    private double Multiply(double num1, double num2)
     {
         return num1 * num2;
     }
 
-    public double Divide(double num1, double num2)
+    private double Divide(double num1, double num2)
     {
         if (num2 == 0)
         {
