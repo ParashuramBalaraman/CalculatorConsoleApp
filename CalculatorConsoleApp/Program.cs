@@ -97,7 +97,7 @@ class VerifyInput
     }
 }
 
- class Program //Figure out why this is partial and why I can't make it a normal class
+ class Program 
 {
     static void Main(string[] args)
     {
