@@ -1,61 +1,86 @@
-﻿class Calculator
+﻿interface ICalculator
+{
+    // Calculate is still behaviour of the calculator and is a public method
+    void Calculate(double num1, double num2, string operation);
+}
+
+abstract class AbstractCalculator
 {
     // Encapsulation as it hides the implementation details of the calculation from the user.
-    private double Add(double num1, double num2)
+    protected double Add(double num1, double num2)
     {
         return num1 + num2;
     }
 
-    private double Subtract(double num1, double num2)
+    protected double Subtract(double num1, double num2)
     {
         return num1 - num2;
     }
 
-    private double Multiply(double num1, double num2)
+    protected double Multiply(double num1, double num2)
     {
         return num1 * num2;
     }
 
-    private double Divide(double num1, double num2)
+    protected double Divide(double num1, double num2)
     {
         return num1 / num2;
     }
+}
 
+
+class Calculator:AbstractCalculator, ICalculator
+{
     public void Calculate(double num1, double num2, string operation)
     {
         double result;
 
         // Validate divisor before performing division
-        if (operation == "div" && num2 == 0)
+        if (operation == "4" && num2 == 0)
         {
             // Single Responsibility Principle as the input validation is separated from the calculation logic.
             num2 = new VerifyInput().GetValidDivisor();
         }
 
-        //Abstraction as the user does not need to know how the specific calculation is selected or how the output message is generated.
-        switch (operation)
+        //Error handling for any invalid operation using the try and catch block.
+        try
         {
-            case "add":
-                result = Add(num1, num2);
-                break;
-            case "sub":
-                result = Subtract(num1, num2);
-                break;
-            case "mult":
-                result = Multiply(num1, num2);
-                break;
-            case "div":
-                result = Divide(num1, num2);
-                break;
-            default:
-                throw new InvalidOperationException("Invalid operation");
+            //Abstraction as the user does not need to know how the specific calculation is selected or how the output message is generated.
+            switch (operation)
+            {
+                case "1":
+                    result = Add(num1, num2);
+                    operation = "+";
+                    break;
+                case "2":
+                    result = Subtract(num1, num2);
+                    operation = "-";
+                    break;
+                case "3":
+                    result = Multiply(num1, num2);
+                    operation = "*";
+                    break;
+                case "4":
+                    result = Divide(num1, num2);
+                    operation = "/";
+                    break;
+                default:
+                    throw new InvalidOperationException("Invalid operation");
+            }
+            Console.WriteLine($"Your result: {num1} {operation} {num2} = " + result);
         }
-        Console.WriteLine($"Your result: {num1} {operation} {num2} = " + result);
-        Console.Write("Press any key to close the Calculator console app...");
-        Console.ReadKey();
+        catch (Exception e)
+        {
+            Console.WriteLine($"The following error occured: { e.Message}");
+            return;
+        }
+        
+
+
     }
 }
 
+//Maybe needs an abstract class
 class VerifyInput
 {
     // Abstraction as the user does not need to know how the inputs are validated.
@@ -71,16 +96,16 @@ class VerifyInput
     }
     public string GetValidOperation()
     {
-        Console.WriteLine("Please choose one of the following operations:");
-        Console.WriteLine("add - Addition");
-        Console.WriteLine("sub - Subtraction");
-        Console.WriteLine("mult - Multiplication");
-        Console.WriteLine("div - Division");
+        Console.WriteLine("Please choose one of the following operations:"); 
+        Console.WriteLine("1 - Addition"); 
+        Console.WriteLine("2 - Subtraction"); 
+        Console.WriteLine("3 - Multiplication"); 
+        Console.WriteLine("4 - Division"); 
         string operation = Console.ReadLine();
-        string[] validOperations = { "add", "sub", "mult", "div" };
+        string[] validOperations = { "1", "2", "3", "4" };
         while (!validOperations.Contains(operation))
         {
-            Console.WriteLine("Please input a valid operation (add/sub/mult/div)");
+            Console.WriteLine("Please input a valid operation (1/2/3/4)");
             operation = Console.ReadLine();
         }
         return operation;
@@ -97,19 +122,48 @@ class VerifyInput
     }
 }
 
- class Program 
+class EndOfCalculation
+{
+    // Abstraction as the user does not need to know how the output message is generated.
+    public bool ContinueOrExit()
+    {
+        Console.Write("Please input 'y' to continue or 'n' to exit");
+        string response = Console.ReadLine();
+        while (response != "y" && response != "n")
+        {
+            Console.WriteLine("Invalid input. Please input 'y' to continue or 'n' to exit");
+            response = Console.ReadLine();
+        }
+        if (response == "y")
+        {
+            return true;
+        }
+        else
+        {
+            Console.WriteLine("Thanks for using the calculator.");
+            return false;
+        }
+    }
+}
+
+class Program 
 {
     static void Main(string[] args)
     {
         // Follows the Single Responsibilty Principle as each class has a single responsibility. Rather than Calculator class doing the input validation as well.
         VerifyInput VerifyInput = new VerifyInput();
         Calculator calculator = new Calculator();
+        bool continueCalculation = true;
 
-        // Abstraction as it hides the process of verifying whether the input is a valid number and operation.
-        double num1 = VerifyInput.GetValidNumber("Please input first number");
-        double num2 = VerifyInput.GetValidNumber("Please input second number");
-        string operation = VerifyInput.GetValidOperation();
+        while (continueCalculation)
+        {
+            // Abstraction as it hides the process of verifying whether the input is a valid number and operation.
+            string operation = VerifyInput.GetValidOperation();
+            double num1 = VerifyInput.GetValidNumber("Please input first number");
+            double num2 = VerifyInput.GetValidNumber("Please input second number");
 
-        calculator.Calculate(num1, num2, operation);
+            calculator.Calculate(num1, num2, operation);
+            continueCalculation = new EndOfCalculation().ContinueOrExit();
+        }
     }
 }
