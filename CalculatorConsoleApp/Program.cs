@@ -18,16 +18,20 @@
 
     private double Divide(double num1, double num2)
     {
-        if (num2 == 0)
-        {
-            throw new DivideByZeroException("Cannot divide by zero");
-        }
         return num1 / num2;
     }
 
     public void Calculate(double num1, double num2, string operation)
     {
         double result;
+
+        // Validate divisor before performing division
+        if (operation == "div" && num2 == 0)
+        {
+            // Single Responsibility Principle as the input validation is separated from the calculation logic.
+            num2 = new VerifyInput().GetValidDivisor();
+        }
+
         //Abstraction as the user does not need to know how the specific calculation is selected or how the output message is generated.
         switch (operation)
         {
@@ -80,6 +84,16 @@ class VerifyInput
             operation = Console.ReadLine();
         }
         return operation;
+    }
+
+    public double GetValidDivisor()
+    {
+        double divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor");
+        while (divisor == 0)
+        {
+            divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor");
+        }
+        return divisor;
     }
 }
 
