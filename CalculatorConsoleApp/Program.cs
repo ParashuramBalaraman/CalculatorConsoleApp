@@ -55,19 +55,15 @@ namespace CalculatorNS
                 {
                     case "1":
                         result = Add(num1, num2);
-                        operation = "+";
                         break;
                     case "2":
                         result = Subtract(num1, num2);
-                        operation = "-";
                         break;
                     case "3":
                         result = Multiply(num1, num2);
-                        operation = "*";
                         break;
                     case "4":
                         result = Divide(num1, num2);
-                        operation = "/";
                         break;
                     default:
                         throw new InvalidOperationException("Invalid operation");
@@ -83,8 +79,7 @@ namespace CalculatorNS
         }
     }
 
-    //Maybe needs an abstract class
-    class VerifyInput
+        class VerifyInput
     {
         // Abstraction as the user does not need to know how the inputs are validated.
         public double GetValidNumber(string input)
@@ -93,7 +88,7 @@ namespace CalculatorNS
             Console.WriteLine(input);
             while (!double.TryParse(Console.ReadLine(), out number))
             {
-                Console.WriteLine("Please input a valid number");
+                Console.WriteLine("Invalid input! Please input a valid number:");
             }
             return number;
         }
@@ -108,7 +103,7 @@ namespace CalculatorNS
             string[] validOperations = { "1", "2", "3", "4" };
             while (!validOperations.Contains(operation))
             {
-                Console.WriteLine("Please input a valid operation (1/2/3/4)");
+                Console.WriteLine("Invalid input! Please input a valid operation (1/2/3/4):");
                 operation = Console.ReadLine();
             }
             return operation;
@@ -116,10 +111,10 @@ namespace CalculatorNS
 
         public double GetValidDivisor()
         {
-            double divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor");
+            double divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor:");
             while (divisor == 0)
             {
-                divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor");
+                divisor = GetValidNumber("Divisor cannot be zero. Please input a valid divisor:");
             }
             return divisor;
         }
@@ -151,11 +146,11 @@ namespace CalculatorNS
         // Abstraction as the user does not need to know how the output message is generated.
         public bool ContinueOrExit()
         {
-            Console.WriteLine("Please input 'y' to continue or 'n' to exit");
+            Console.WriteLine("Do you want to continue (y/n):");
             string response = Console.ReadLine();
             while (response != "y" && response != "n")
             {
-                Console.WriteLine("Invalid input. Please input 'y' to continue or 'n' to exit");
+                Console.WriteLine("Invalid input! Please input 'y' to continue or 'n' to exit:");
                 response = Console.ReadLine();
             }
             if (response == "y")
@@ -185,8 +180,8 @@ namespace CalculatorNS
             {
                 // Abstraction as it hides the process of verifying whether the input is a valid number and operation.
                 string operation = VerifyInput.GetValidOperation();
-                double num1 = VerifyInput.GetValidNumber("Please input first number");
-                double num2 = VerifyInput.GetValidNumber("Please input second number");
+                double num1 = VerifyInput.GetValidNumber("Please input the first number:");
+                double num2 = VerifyInput.GetValidNumber("Please input the second number:");
 
                 result = calculator.Calculate(num1, num2, operation);
                 EndOfCalculation.ResultOutput(num1, num2, operation, result);
